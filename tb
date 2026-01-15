@@ -1,0 +1,35 @@
+module ALUX();
+parameter WIDTH = 8;
+reg [WIDTH-1:0] a, b;
+reg [3:0] opcode;
+reg cin;
+
+wire [WIDTH-1:0] y;
+wire carry, overflow, zero, negative, parity;
+
+ALU #(WIDTH) DUT (
+                   .a(a),
+                   .b(b),
+                   .opcode(opcode),
+                   .cin(cin),
+                   .y(y),
+                   .carry(carry),
+                   .overflow(overflow),
+                   .zero(zero),
+                   .negative(negative),
+                   .parity(parity));
+
+initial begin
+a = 0; b = 0; cin = 0; opcode = 0;
+#10 a = 8'h05; b = 8'h03; opcode = 4'h0; 
+#10 opcode = 4'h1;                      
+#10 opcode = 4'h2;                       
+#10 opcode = 4'h3;                      
+#10 opcode = 4'h4;                       
+#10 opcode = 4'h5;                       
+#10 opcode = 4'h6;                      
+#10 opcode = 4'h7; 
+
+#20 $finish;
+end
+endmodule
