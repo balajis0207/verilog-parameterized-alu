@@ -1,0 +1,63 @@
+module ALU
+#(parameter WIDTH =8)
+(
+input  wire [WIDTH-1:0] a,
+input  wire [WIDTH-1:0] b,
+input  wire [3:0] opcode,
+input  wire cin,
+
+output reg  [WIDTH-1:0] y,
+output reg  carry,
+output reg  overflow,
+output wire zero,
+output wire negative,
+output wire parity
+);
+reg [WIDTH:0] sum_ext;
+reg [WIDTH:0] sub_ext;
+
+localparam OP_ADD = 4'h0;
+localparam OP_SUB = 4'h1;
+localparam OP_AND = 4'h2;
+localparam OP_OR  = 4'h3;
+localparam OP_XOR = 4'h4;
+localparam OP_INC = 4'h5;
+localparam OP_DEC = 4'h6;
+localparam OP_NOT = 4'h7;
+
+always @ (*) begin 
+y={WIDTH{1'b0}};
+carry=1'b0;
+overflow=1'b0;
+
+case (opcode)
+
+OP_ADD : begin
+sum_ext = a + b + cin;
+y = sum_ext[WIDTH-1:0];
+carry = sum_ext[WIDTH];
+overflow = (~(a[WIDTH-1] ^ b[WIDTH-1])) & (a[WIDTH-1] ^ y[WIDTH-1]);
+end
+
+OP_SUB : begin
+sub_ext = a - b;
+y = sub_ext[WIDTH-1:0];
+carry = sub_ext[WIDTH];
+overflow =((a[WIDTH-1] ^ b[WIDTH-1])) & (a[WIDTH-1] ^ y[WIDTH-1]);
+end
+
+OP_AND : y=a&b;
+OP_OR : y=a|b;
+OP_XOR : y=a^b;
+OP_INC : y=a+1'b1;
+OP_DEC : y=a-1'b1;
+OP_NOT : y=~a;
+
+default : y={WIDTH{1'b0}};
+endcase
+end
+assign zero = (y == {WIDTH{1'b0}});
+assign negative = y[WIDTH-1];
+assign parity   = ^y; 
+
+endmodule
