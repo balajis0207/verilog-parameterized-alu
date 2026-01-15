@@ -27,7 +27,6 @@ The ALU supports configurable data width and multiple arithmetic and logical ope
 
 ## 📁 Project Structure
 
-                            ======================================================
 ## 🚀 How to Run
 1. Open Vivado
 2. Create a new project
